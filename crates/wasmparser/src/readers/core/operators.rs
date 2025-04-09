@@ -13,7 +13,9 @@
  * limitations under the License.
  */
 
-use crate::limits::{MAX_WASM_BR_TABLE_SIZE, MAX_WASM_CATCHES, MAX_WASM_HANDLERS};
+use crate::limits::{
+    MAX_WASM_BR_TABLE_SIZE, MAX_WASM_CATCHES, MAX_WASM_HANDLERS, MAX_WASM_SELECT_RESULT_SIZE,
+};
 use crate::prelude::*;
 use crate::{BinaryReader, BinaryReaderError, FromReader, RefType, Result, ValType};
 use core::fmt;
@@ -573,11 +575,11 @@ impl<'a> OperatorsReader<'a> {
             0x1a => visitor.visit_drop(),
             0x1b => visitor.visit_select(),
             0x1c => {
-                let results = self.reader.read_var_u32()?;
-                if results != 1 {
-                    bail!(pos, "invalid result arity");
-                }
-                visitor.visit_typed_select(self.reader.read()?)
+                let results = self
+                    .reader
+                    .read_iter(MAX_WASM_SELECT_RESULT_SIZE, "select types")?
+                    .collect::<Result<Vec<_>>>()?;
+                visitor.visit_typed_select(results)
             }
             0x1f => {
                 self.enter(FrameKind::TryTable);

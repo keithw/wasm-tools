@@ -4,6 +4,7 @@ use super::{
 };
 use crate::{unique_string, MemoryOffsetChoices};
 use arbitrary::{Result, Unstructured};
+use std::borrow::Cow;
 use std::collections::{BTreeMap, BTreeSet};
 use std::rc::Rc;
 use wasm_encoder::{
@@ -2665,7 +2666,9 @@ fn select(
     let ty = t.or(u);
     builder.allocs.operands.push(ty);
     match ty {
-        Some(ty @ ValType::Ref(_)) => instructions.push(Instruction::TypedSelect(ty)),
+        Some(ty @ ValType::Ref(_)) => {
+            instructions.push(Instruction::TypedSelect(Cow::from(vec![ty])))
+        }
         Some(ValType::I32) | Some(ValType::I64) | Some(ValType::F32) | Some(ValType::F64)
         | Some(ValType::V128) | None => instructions.push(Instruction::Select),
     }

@@ -611,7 +611,7 @@ pub enum Instruction<'a> {
     I64TruncSatF64U,
 
     // Reference types instructions.
-    TypedSelect(ValType),
+    TypedSelect(Cow<'a, [ValType]>),
     RefNull(HeapType),
     RefIsNull,
     RefFunc(u32),
@@ -1283,8 +1283,7 @@ impl Encode for Instruction<'_> {
             // Parametric instructions.
             Instruction::Drop => sink.drop(),
             Instruction::Select => sink.select(),
-            Instruction::TypedSelect(ty) => sink.typed_select(ty),
-
+            Instruction::TypedSelect(ref tys) => sink.typed_select(tys.as_ref()),
             Instruction::TryTable(ty, ref catches) => sink.try_table(ty, catches.iter().cloned()),
 
             // Variable instructions.

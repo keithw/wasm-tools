@@ -2039,7 +2039,11 @@ where
         self.push_operand(ty)?;
         Ok(())
     }
-    fn visit_typed_select(&mut self, mut ty: ValType) -> Self::Output {
+    fn visit_typed_select(&mut self, mut tys: Vec<ValType>) -> Self::Output {
+        if tys.len() != 1 {
+            bail!(self.offset, "invalid result arity");
+        }
+        let mut ty = tys.pop().unwrap();
         self.resources
             .check_value_type(&mut ty, &self.features, self.offset)?;
         self.pop_operand(Some(ValType::I32))?;

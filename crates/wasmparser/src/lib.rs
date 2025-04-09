@@ -330,7 +330,7 @@ macro_rules! _for_each_operator_group {
             // reference-types
             // https://github.com/WebAssembly/reference-types
             @reference_types {
-                TypedSelect { ty: $crate::ValType } => visit_typed_select (arity 3 -> 1)
+                TypedSelect { tys: Vec<$crate::ValType> } => visit_typed_select (arity select -> select)
                 RefNull { hty: $crate::HeapType } => visit_ref_null (arity 0 -> 1)
                 RefIsNull => visit_ref_is_null (arity 1 -> 1)
                 RefFunc { function_index: u32 } => visit_ref_func (arity 0 -> 1)
