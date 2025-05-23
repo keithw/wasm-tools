@@ -440,7 +440,7 @@ impl<'a> BinaryReader<'a> {
     ///
     /// If `BinaryReader` has less than one or up to four bytes remaining, or
     /// the integer is larger than 32 bits.
-    #[inline]
+    #[inline(always)]
     pub fn read_var_u32(&mut self) -> Result<u32> {
         // Optimization for single byte i32.
         let byte = self.read_u8()?;
