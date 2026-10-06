@@ -77,7 +77,7 @@ pub(crate) struct OperatorValidator {
 
     /// The number of pops skipped entirely because of unreachable code.
     #[cfg(debug_assertions)]
-    pub(crate) elided_bottom_pops: u32,
+    pub(crate) elided_bottom_pops: u64,
 
     /// When "try-op" validation of an operator is pending, this is a trace
     /// of discarded info that can restore the OperatorValidator to its
@@ -3935,7 +3935,7 @@ where
                 assert_eq!(self.pop_operand(Some(elem_ty))?, MaybeType::Bottom);
                 #[cfg(debug_assertions)]
                 {
-                    self.elided_bottom_pops += n - i - 1;
+                    self.elided_bottom_pops += (n - i - 1) as u64;
                 }
                 break;
             }

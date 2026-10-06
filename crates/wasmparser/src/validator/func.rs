@@ -170,7 +170,7 @@ impl<T: WasmModuleResources> FuncValidator<T> {
                 pop_count += self.validator.elided_bottom_pops;
                 self.validator.elided_bottom_pops = 0;
 
-                if pop_count != params || push_count != results {
+                if pop_count != params.into() || push_count != results {
                     panic!(
                         "\
 arity mismatch in validation
