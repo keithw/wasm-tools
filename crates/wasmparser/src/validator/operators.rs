@@ -525,6 +525,7 @@ impl OperatorValidator {
         T: WasmModuleResources,
         'resources: 'validator,
     {
+        self.reset_arity_debug_log();
         WasmProposalValidator(OperatorValidatorTemp {
             offset,
             inner: self,
@@ -544,6 +545,7 @@ impl OperatorValidator {
         T: WasmModuleResources,
         'resources: 'validator,
     {
+        self.reset_arity_debug_log();
         WasmProposalValidator(OperatorValidatorTemp {
             offset,
             inner: self,
@@ -589,6 +591,14 @@ impl OperatorValidator {
         #[cfg(debug_assertions)]
         {
             self.pop_push_log.push(true);
+        }
+    }
+
+    pub(crate) fn reset_arity_debug_log(&mut self) {
+        #[cfg(debug_assertions)]
+        {
+            self.pop_push_log.clear();
+            self.elided_bottom_pops = 0;
         }
     }
 

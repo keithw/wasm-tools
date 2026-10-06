@@ -131,8 +131,7 @@ impl<T: WasmModuleResources> FuncValidator<T> {
                 self.validator.begin_try_op();
                 let _ = self.op(reader.original_position(), &op);
                 self.validator.rollback();
-                self.validator.pop_push_log.clear();
-                self.validator.elided_bottom_pops = 0;
+                self.validator.reset_arity_debug_log();
                 assert!(self.validator == snapshot);
             }
 
@@ -168,7 +167,7 @@ impl<T: WasmModuleResources> FuncValidator<T> {
                     }
                 }
                 pop_count += self.validator.elided_bottom_pops;
-                self.validator.elided_bottom_pops = 0;
+                self.validator.reset_arity_debug_log();
 
                 if pop_count != params || push_count != results {
                     panic!(
