@@ -3935,7 +3935,10 @@ where
                 assert_eq!(self.pop_operand(Some(elem_ty))?, MaybeType::Bottom);
                 #[cfg(debug_assertions)]
                 {
-                    self.elided_bottom_pops += n - i - 1;
+                    self.elided_bottom_pops = self.elided_bottom_pops.saturating_add(n - i - 1);
+                    // ok to saturate because any single operator can only have u32::MAX bottom pops,
+                    // and a consumer that's checking for correct arity (like the FuncValidator::validate
+                    // convenience function) needs to clear pop_push_log and elided_bottom_pops after each op
                 }
                 break;
             }
